@@ -256,7 +256,7 @@ namespace HumaneSociety
 
         internal static IQueryable<Adoption> GetPendingAdoptions()
         {
-            throw new NotImplementedException();
+            return db.Adoptions.Where(ad => ad.ApprovalStatus == "Pending").Select(ad => ad);
         }
 
         internal static void UpdateAdoption(bool isAdopted, Adoption adoption)
