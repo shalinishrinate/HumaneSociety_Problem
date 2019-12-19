@@ -276,13 +276,15 @@ namespace HumaneSociety
 
         internal static void RemoveAdoption(int animalId, int clientId)
         {
-            throw new NotImplementedException();
+            var thisAdoption = db.Adoptions.Where(ad => ad.AnimalId != animalId || ad.ClientId != clientId).Select(ad => ad).First();
+            db.Adoptions.DeleteOnSubmit(thisAdoption);
+            db.SubmitChanges();
         }
 
         // TODO: Shots Stuff
         internal static IQueryable<AnimalShot> GetShots(Animal animal)
         {
-           return  db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).Select(a => a.ShotId).Single();
+           return  db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).Select(a => a.ShotId).First();
             //testing 
         }
 
