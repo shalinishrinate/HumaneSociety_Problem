@@ -228,7 +228,7 @@ namespace HumaneSociety
         
         internal static Room GetRoom(int animalId)
         {
-            throw new NotImplementedException();
+            return db.Rooms.Where(r => r.AnimalId == animalId).Select(r => r).FirstOrDefault();
         }
         
         internal static int GetDietPlanId(string dietPlanName)
