@@ -223,17 +223,17 @@ namespace HumaneSociety
         // TODO: Misc Animal Things
         internal static int GetCategoryId(string categoryName)
         {
-            throw new NotImplementedException();
+            return db.Categories.Where(c => c.Name == categoryName).Select(c => c.CategoryId).Single();
         }
         
         internal static Room GetRoom(int animalId)
         {
-            return db.Rooms.Where(r => r.AnimalId == animalId).Select(r => r).FirstOrDefault();
+            return db.Rooms.Where(r => r.AnimalId == animalId).Select(r => r).Single();
         }
         
         internal static int GetDietPlanId(string dietPlanName)
         {
-            throw new NotImplementedException();
+            return db.DietPlans.Where(d => d.Name == dietPlanName).Select(d => d.DietPlanId).Single();
         }
 
         // TODO: Adoption CRUD Operations
