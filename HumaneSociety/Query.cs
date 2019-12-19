@@ -273,6 +273,7 @@ namespace HumaneSociety
         internal static IQueryable<AnimalShot> GetShots(Animal animal)
         {
            return  db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).Select(a => a.ShotId).Single();
+            //testing 
         }
 
         internal static void UpdateShot(string shotName, Animal animal)
