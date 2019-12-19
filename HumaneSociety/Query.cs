@@ -261,7 +261,17 @@ namespace HumaneSociety
 
         internal static void UpdateAdoption(bool isAdopted, Adoption adoption)
         {
-            throw new NotImplementedException();
+            var newAdoption = db.Adoptions.Where(ad => ad.AnimalId == adoption.AnimalId && ad.ClientId == adoption.ClientId).Select(ad => ad).First();  
+
+            if (isAdopted == true)
+            {
+                adoption.ApprovalStatus = "Approved";
+                adoption.PaymentCollected = true;
+            }
+            else
+            {
+                adoption.ApprovalStatus = "Pending";
+            }
         }
 
         internal static void RemoveAdoption(int animalId, int clientId)
