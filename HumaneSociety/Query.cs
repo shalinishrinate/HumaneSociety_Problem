@@ -178,12 +178,14 @@ namespace HumaneSociety
                 case "create":
                     AddEmployee(employee);
                     break;
+
                 case "read":
                     ReadEmployeeInfo(employee);
                     break;
                 case "update":
                     UpdateEmployeeInfo(employee);
                     break;
+
                 case "delete":
                     DeleteEmployee(employee);
                     break;
@@ -258,13 +260,14 @@ namespace HumaneSociety
             db.Employees.DeleteOnSubmit(employ);
             db.SubmitChanges();
         }
-
         // TODO: Animal CRUD Operations
         internal static void AddAnimal(Animal animal)
         {
             db.Animals.InsertOnSubmit(animal);
             db.SubmitChanges(); // because it needs to update the db
         }
+
+
 
         internal static Animal GetAnimalByID(int id)
         {
@@ -275,6 +278,7 @@ namespace HumaneSociety
         {
             var currentAnimal = db.Animals.Where(a => a.AnimalId == animalId).Select(a => a).Single();
             foreach (KeyValuePair<int, string> input in updates)
+
             {
                 switch (input.Key)
                 {
@@ -322,6 +326,7 @@ namespace HumaneSociety
                 {
                     case 1:
                         animals = animals.Where(a => a.Category.Name == update.Value).Select(a => a);
+
                         break;
                     case 2:
                         animals = animals.Where(a => a.Name == update.Value).Select(a => a);
@@ -347,6 +352,7 @@ namespace HumaneSociety
                 }
             }
             return animals;
+
         }
 
         // TODO: Misc Animal Things
@@ -421,6 +427,7 @@ namespace HumaneSociety
         {
             if (db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).Select(s => s).Single() == null)
             {
+
             }
             else
             {
