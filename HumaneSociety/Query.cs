@@ -217,7 +217,40 @@ namespace HumaneSociety
         // TODO: Animal Multi-Trait Search
         internal static IQueryable<Animal> SearchForAnimalsByMultipleTraits(Dictionary<int, string> updates) // parameter(s)?
         {
-            throw new NotImplementedException();
+            var animals = db.Animals.AsQueryable();
+            foreach (KeyValuePair<int,string> update in updates)
+            {
+                switch (update.Key)
+                {
+                    case 1:
+                        animals = animals.Where(a => a.CategoryId == Convert.ToInt32(update.Value));
+                        return animals;
+                    case 2:
+                        animals = animals.Where(a => a.Name == update.Value);
+                        return animals;
+                   case 3:
+                        animals = db.Animals.Where(a => a.Age == Convert.ToInt32(update.Value));
+                        return animals;
+                    case 4:
+                        animals = db.Animals.Where(a => a.Demeanor == update.Value);
+                        return animals;
+                    case 5:
+                        animals = db.Animals.Where(a => a.KidFriendly == bool.Parse(update.Value));
+                        return animals;
+                    case 6:
+                        animals = db.Animals.Where(a => a.PetFriendly == bool.Parse(update.Value));
+                        return animals;
+                    case 7:
+                        animals =db.Animals.Where(a => a.Weight == Convert.ToInt32(update.Value));
+                        return animals;
+                    case 8:
+                        animals = db.Animals.Where(a => a.AnimalId == Convert.ToInt32(update.Value));
+                        return animals;
+                }
+                
+            }
+            return animals;
+
         }
          
         // TODO: Misc Animal Things
@@ -256,28 +289,41 @@ namespace HumaneSociety
 
         internal static IQueryable<Adoption> GetPendingAdoptions()
         {
-            throw new NotImplementedException();
+            return db.Adoptions.Where(ad => ad.ApprovalStatus == "Pending").Select(ad => ad);
         }
 
         internal static void UpdateAdoption(bool isAdopted, Adoption adoption)
         {
-            throw new NotImplementedException();
+            var newAdoption = db.Adoptions.Where(ad => ad.AnimalId == adoption.AnimalId && ad.ClientId == adoption.ClientId).Select(ad => ad).First();
+            if (isAdopted = true)
+            {
+                newAdoption.ApprovalStatus = "Approved";
+                newAdoption.PaymentCollected = true;
+            }
+            else
+            {
+                newAdoption.ApprovalStatus = "Pending";
+            }
+            db.SubmitChanges();
         }
-
+        
         internal static void RemoveAdoption(int animalId, int clientId)
         {
-            throw new NotImplementedException();
+           var thisAdoption = db.Adoptions.Where(ad => ad.AnimalId != animalId || ad.ClientId != clientId).Select(ad => ad).First();
+            db.Adoptions.DeleteOnSubmit(thisAdoption);
+            db.SubmitChanges();
         }
 
         // TODO: Shots Stuff
         internal static IQueryable<AnimalShot> GetShots(Animal animal)
         {
-           return  db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).Select(a => a.ShotId).Single();
+            //return db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).Select(a => a.ShotId).Single();
         }
 
         internal static void UpdateShot(string shotName, Animal animal)
         {
             throw new NotImplementedException();
         }
+
     }
 }
