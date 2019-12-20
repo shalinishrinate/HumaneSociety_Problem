@@ -80,7 +80,7 @@ namespace HumaneSociety
             {
                 clientFromDb = db.Clients.Where(c => c.ClientId == clientWithUpdates.ClientId).Single();
             }
-            catch(InvalidOperationException e)
+            catch(InvalidOperationException)
             {
                 Console.WriteLine("No clients have a ClientId that matches the Client passed in.");
                 Console.WriteLine("No update have been made.");
@@ -217,35 +217,35 @@ namespace HumaneSociety
         // TODO: Animal Multi-Trait Search
         internal static IQueryable<Animal> SearchForAnimalsByMultipleTraits(Dictionary<int, string> updates) // parameter(s)?
         {
-            var animals = db.Animals.AsQueryable();
+            var animals = db.Animals.Select(a=>a);
             foreach (KeyValuePair<int,string> update in updates)
             { 
                 switch (update.Key)
                 {
                     case 1:
-                        animals = animals.Where(a => a.CategoryId == Convert.ToInt32(update.Value));
-                        return animals;                        
+                        animals = animals.Where(a => a.CategoryId == Convert.ToInt32(update.Value)).Select(a=>a);
+                        break;                     
                     case 2:
-                        animals = db.Animals.Where(a => a.Name == update.Value);
-                        return animals;
+                        animals = animals.Where(a => a.Name == update.Value).Select(a => a);
+                        break;
                     case 3:
-                        animals = db.Animals.Where(a => a.Age == Convert.ToInt32(update.Value));
-                        return animals;
+                        animals = animals.Where(a => a.Age == Convert.ToInt32(update.Value)).Select(a => a);
+                        break;
                     case 4:
-                        animals = db.Animals.Where(a => a.Demeanor == update.Value).Select(a=>a);
-                        return animals;
+                        animals = animals.Where(a => a.Demeanor == update.Value).Select(a=>a).Select(a => a);
+                        break;
                     case 5:
-                        animals = db.Animals.Where(a => a.KidFriendly == bool.Parse(update.Value));
-                        return animals;
+                        animals = animals.Where(a => a.KidFriendly == bool.Parse(update.Value)).Select(a => a);
+                        break;
                     case 6:
-                        animals = db.Animals.Where(a => a.PetFriendly == bool.Parse(update.Value));
-                        return animals;
+                        animals = animals.Where(a => a.PetFriendly == bool.Parse(update.Value)).Select(a => a);
+                        break;
                     case 7:
-                        animals = db.Animals.Where(a => a.Weight == Convert.ToInt32(update.Value));
-                        return animals;
+                        animals = animals.Where(a => a.Weight == Convert.ToInt32(update.Value)).Select(a => a);
+                        break;
                     case 8:
-                        animals = db.Animals.Where(a => a.AnimalId == Convert.ToInt32(update.Value));
-                        return animals;
+                        animals = animals.Where(a => a.AnimalId == Convert.ToInt32(update.Value)).Select(a => a);
+                        break;
                 }                
             }
             return animals;
