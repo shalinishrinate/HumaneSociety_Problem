@@ -170,33 +170,58 @@ namespace HumaneSociety
             {
 
                 case "create":
-                    db.Employees.InsertOnSubmit(employee);
+                    AddEmployee(employee);
                     break;
+
                 case "read":
-                    var Worker = db.Employees.Where(e => e == employee).Select(e => e).Single();
-                    Console.WriteLine("First Name: " + Worker.FirstName + "\n"
-                                      + "Last Name: " + Worker.LastName + "\n"
-                                      + "Employee Number: " + Worker.EmployeeNumber + "\n"
-                                      + "Email Address: " + Worker.Email + "\n");
-                    Console.ReadLine();
+                    ReadEmployeeInfo(employee);
                     break;
 
                 case "update":
-                    var currentEmployee =db.Employees.Where(e => e.EmployeeId == employee.EmployeeId).Select(e => e).Single();
-                    currentEmployee.FirstName = employee.FirstName;
-                    currentEmployee.LastName = employee.LastName;
-                    currentEmployee.UserName = employee.UserName;
-                    currentEmployee.Password = employee.Password;
-                    currentEmployee.EmployeeId = employee.EmployeeId;
-                    currentEmployee.Email = employee.Email;
+                    UpdateEmployeeInfo(employee);
                     break;
 
                 case "delete":
-                    db.Employees.DeleteOnSubmit(employee);
+                    DeleteEmployee(employee);
                     break;
                 default:
                     break;
             }
+            db.SubmitChanges();
+        }
+
+        internal static void AddEmployee(Employee employee)
+        {
+            db.Employees.InsertOnSubmit(employee);
+            db.SubmitChanges();
+        }
+
+        internal static void ReadEmployeeInfo(Employee employee)
+        {
+            var Worker = db.Employees.Where(e => e == employee).Select(e => e).Single();
+            Console.WriteLine("First Name: " + Worker.FirstName + "\n"
+                              + "Last Name: " + Worker.LastName + "\n"
+                              + "Employee Number: " + Worker.EmployeeNumber + "\n"
+                              + "Email Address: " + Worker.Email + "\n");
+            Console.ReadLine();
+        }
+
+        internal static void UpdateEmployeeInfo(Employee employee)
+        {
+            var currentEmployee = db.Employees.Where(e => e.EmployeeId == employee.EmployeeId).Select(e => e).Single();
+            currentEmployee.FirstName = employee.FirstName;
+            currentEmployee.LastName = employee.LastName;
+            currentEmployee.UserName = employee.UserName;
+            currentEmployee.Password = employee.Password;
+            currentEmployee.EmployeeId = employee.EmployeeId;
+            currentEmployee.Email = employee.Email;
+
+            db.SubmitChanges();
+        }
+
+        internal static void DeleteEmployee(Employee employee)
+        {
+            db.Employees.DeleteOnSubmit(employee);
             db.SubmitChanges();
         }
 
@@ -206,6 +231,8 @@ namespace HumaneSociety
             db.Animals.InsertOnSubmit(animal);
             db.SubmitChanges(); // because it needs to update the db
         }
+
+        
 
         internal static Animal GetAnimalByID(int id)
         {
