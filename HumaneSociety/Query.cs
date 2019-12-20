@@ -180,7 +180,16 @@ namespace HumaneSociety
                                       + "Email Address: " + Worker.Email + "\n");
                     Console.ReadLine();
                     break;
-                //case "update":
+
+                case "update":
+                    var currentEmployee =db.Employees.Where(e => e.EmployeeId == employee.EmployeeId).Select(e => e).Single();
+                    currentEmployee.FirstName = employee.FirstName;
+                    currentEmployee.LastName = employee.LastName;
+                    currentEmployee.UserName = employee.UserName;
+                    currentEmployee.Password = employee.Password;
+                    currentEmployee.EmployeeId = employee.EmployeeId;
+                    currentEmployee.Email = employee.Email;
+                    break;
 
                 case "delete":
                     db.Employees.DeleteOnSubmit(employee);
