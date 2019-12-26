@@ -99,7 +99,7 @@ namespace HumaneSociety
         {
             Employee employee = new Employee();
             employee.LastName = UserInterface.GetStringData("last name", "the employee's"); ;
-            employee.EmployeeNumber = int.Parse(UserInterface.GetStringData("employee number", "the employee's"));
+           employee.EmployeeNumber = int.Parse(UserInterface.GetStringData("employee number", "the employee's"));
             try
             {
                 Console.Clear();

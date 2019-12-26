@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace HumaneSociety
 {
@@ -257,6 +258,12 @@ namespace HumaneSociety
         internal static void DeleteEmployee(Employee employee)
         {
             var employ = db.Employees.Where(e => e.LastName == employee.LastName && e.EmployeeNumber == employee.EmployeeNumber).Select(e => e).Single();
+            var animals = db.Animals.Where(a => a.EmployeeId == employ.EmployeeId).Select(a => a);
+            foreach (var item in animals)
+            {
+                item.EmployeeId = null;
+            }
+            db.SubmitChanges();
             db.Employees.DeleteOnSubmit(employ);
             db.SubmitChanges();
         }
@@ -266,8 +273,6 @@ namespace HumaneSociety
             db.Animals.InsertOnSubmit(animal);
             db.SubmitChanges(); // because it needs to update the db
         }
-
-
 
         internal static Animal GetAnimalByID(int id)
         {
@@ -425,17 +430,72 @@ namespace HumaneSociety
 
         internal static void UpdateShot(string shotName, Animal animal)
         {
-            if (db.AnimalShots.Where(s => s.AnimalId == animal.AnimalId).Select(s => s).Single() == null)
+            DateTime newDate = new DateTime();
+            var newShot = db.AnimalShots.Where(a => a.AnimalId == animal.AnimalId).Select(a => a).SingleOrDefault();
+            if (newShot == null)
             {
-
+                Shot shot = new Shot();
+                shot.Name = shotName;
+                db.Shots.InsertOnSubmit(shot);
+                db.SubmitChanges();
+                AnimalShot animalShot = new AnimalShot();
+                animalShot.DateReceived = newDate.Date;
+                animalShot.AnimalId = animal.AnimalId;
+                animalShot.ShotId = shot.ShotId;
+                db.AnimalShots.InsertOnSubmit(animalShot);
+                db.SubmitChanges();
             }
             else
             {
                 var updateAnimalShot = db.AnimalShots.Where(a => a.AnimalId == animal.AnimalId && a.Shot.Name == shotName).Select(a => a).Single();
-                DateTime newDate = new DateTime();
                 updateAnimalShot.DateReceived = newDate.Date;
             }
             db.SubmitChanges();
+        }
+        internal static List<string[]> GetCSVInfo(string filename)
+        {
+            var info = File.ReadAllLines(filename);
+            List<string[]> table = new List<string[]>();
+            foreach (var item in info)
+            {
+                string[] newInfo = new string[item.Length];
+                newInfo = item.Split(new[] { ',', ' ', '"' }, StringSplitOptions.RemoveEmptyEntries);
+                table.Add(newInfo);
+            }
+            return table;
+        }
+        internal static void AddNewAnimal()
+        {
+            var table = GetCSVInfo("animals.csv");
+            foreach (var item in table)
+            {
+                Animal animal = new Animal();
+                animal.Name = item[0];
+                animal.Weight = Convert.ToInt32(item[1]);
+                animal.Age = Convert.ToInt32(item[2]);
+                animal.Demeanor = item[3];
+                animal.KidFriendly = ConvertToBool(item[4]);
+                animal.PetFriendly = ConvertToBool(item[5]);
+                animal.Gender = item[6];
+                animal.AdoptionStatus = item[7];
+                if (db.Animals.Where(a => a.Name == animal.Name && a.Weight == animal.Weight && a.Gender == animal.Gender && a.Age == animal.Age).Select(a => a).SingleOrDefault() == null)
+                {
+                    AddAnimal(animal);
+                }
+            }
+        }
+
+
+        internal static bool ConvertToBool(string input)
+        {
+            if (input == "1" )
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }
