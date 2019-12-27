@@ -317,7 +317,14 @@ namespace HumaneSociety
 
         internal static void RemoveAnimal(Animal animal)
         {
-            db.Animals.DeleteOnSubmit(animal);
+            var thisAnimal = db.Animals.Where(a => a.Name == animal.Name && a.AnimalId == animal.AnimalId).Select(a => a).Single();
+            Room animalRoom = db.Rooms.Where(r => r.AnimalId == thisAnimal.AnimalId).Select(r => r).SingleOrDefault();
+            if (animalRoom != null)
+            {
+                db.Rooms.DeleteOnSubmit(animalRoom);
+            }
+            db.SubmitChanges();
+            db.Animals.DeleteOnSubmit(thisAnimal);
             db.SubmitChanges();
         }
 
@@ -331,7 +338,6 @@ namespace HumaneSociety
                 {
                     case 1:
                         animals = animals.Where(a => a.Category.Name == update.Value).Select(a => a);
-
                         break;
                     case 2:
                         animals = animals.Where(a => a.Name == update.Value).Select(a => a);
@@ -488,7 +494,7 @@ namespace HumaneSociety
 
         internal static bool ConvertToBool(string input)
         {
-            if (input == "1" )
+            if (input == "1")
             {
                 return true;
             }
